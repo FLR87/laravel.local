@@ -14,8 +14,10 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::all()->toArray();
-        return view('tasks.index', compact('tasks'));
+//        $tasks = Task::all()->toArray()->paginate(5);
+        $tasks = Task::paginate(5);
+//        return view('tasks.index', compact('tasks'));
+        return view('tasks.index', ['tasks' => $tasks]);
     }
 
     /**
@@ -54,9 +56,11 @@ class TaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $id)
     {
-        //
+        if (view()->exists('tasks'))
+        $tasks = DB::table('tasks')->first();
+        dd($tasks);
     }
 
     /**

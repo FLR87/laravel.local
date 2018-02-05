@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Tasks Data Table</title>
+    <title>Bootstrap Tasks Table</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -177,48 +177,44 @@
 </head>
 <body>
 <div class="container">
-    <h2 align="center">Edit Task</h2><br/>
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+    <br/>
+    @if (\Session::has('success'))
+        <div class="alert alert-success">
+            <p>{{ \Session::get('success') }}</p>
         </div><br/>
     @endif
-    <form method="post" action="{{action('TaskController@update', $id)}}">
-        {{csrf_field()}}
-        <input name="_method" type="hidden" value="PATCH">
-        <div class="row">
-            <div class="col-md-4" ></div>
-            <div class="form-group col-md-4">
-                <label for="name">Name:</label>
-                <input type="text" class="form-control" name="name" value="{{$task->name}}">
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4"></div>
-            <div class="form-group col-md-4">
-                <label for="email">Email:</label>
-                <input type="email" class="form-control" name="email" value="{{$task->email}}">
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4"></div>
-            <div class="form-group col-md-4">
-                <label for="task">Task:</label>
-                <input type="text" class="form-control" name="task" value="{{$task->task}}">
-            </div>
-        </div>
-<div class="row">
-    <div class="col-md-4"></div>
-    <div class="form-group col-md-4">
-        <button type="submit" class="btn btn" style="margin-left:0px">Update task data</button>
-        <a href="{{action('TaskController@index')}}" class="btn btn-default">View all tasks</a></td>
-    </div>
-</div>
-</form>
+    <a href="{{action('TaskController@create')}}" class="btn btn-info">Make new task</a></td>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Task</th>
+            <th colspan="2">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach($tasks as $task)
+            <tr>
+                <td>{{$task['id']}}</td>
+                <td>{{$task['name']}}</td>
+                <td>{{$task['email']}}</td>
+                <td>{{$task['task']}}</td>
+                <td>{{$task['updated_at']}}</td>
+                <td><a href="{{action('TaskController@edit', $task['id'])}}" class="btn">Edit</a></td>
+                <td>
+                    <form action="{{action('TaskController@destroy', $task['id'])}}" method="post">
+                        {{csrf_field()}}
+                        <input name="_method" type="hidden" value="DELETE">
+                        <button class="btn" type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        @endforeach
+        </tbody>
+    </table>
+    {{ $tasks->links() }}
 </div>
 </body>
 </html>
